@@ -11,7 +11,7 @@ class Sort extends Component {
                 </button>
                 <div className="dropdown-menu">
                     <a className="dropdown-item"><i className="fas fa-sort-alpha-down mr-2"></i> Task A-Z <i className="fas fa-check ml-5"></i></a>
-                    <a className="dropdown-item"><i class="fas fa-sort-alpha-down-alt mr-2"></i> Task Z-A</a>                  
+                    <a className="dropdown-item"><i className="fas fa-sort-alpha-down-alt mr-2"></i> Task Z-A</a>                  
                     <div className="dropdown-divider"></div>
                     <a className="dropdown-item">Activated Status</a>
                     <a className="dropdown-item">Hidden Status</a>

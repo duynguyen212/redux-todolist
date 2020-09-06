@@ -8,7 +8,8 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tasks: []
+      tasks: [],
+      isDisplayForm: false
     };
   }
   
@@ -60,8 +61,20 @@ class App extends Component {
     return this.s4() + '-' + this.s4() + 'x' + this.s4() + this.s4();
   }
 
+  onToggleForm = () => {
+    this.setState({
+      isDisplayForm: !this.state.isDisplayForm
+    });
+  }
+
+  onCloseForm = () => {
+    //console.log('you closed form');
+    this.setState({ isDisplayForm: false });
+  }
+
   render() {
-    var { tasks } = this.state // ~ var tasks = this.state.tasks;
+    var { tasks, isDisplayForm } = this.state // ~ var tasks = this.state.tasks;
+    var elmTaskForm = isDisplayForm ? <TaskForm onCloseForm = { this.onCloseForm } /> : '';
     return (
       <div className="container">
         <div className="mt-2">
@@ -71,10 +84,12 @@ class App extends Component {
         <div className="row">
           {/* Form */}
           <div className="col-lg-4 col-md-4 col-xs-12 col-sm-12">
-            <TaskForm />
+            { elmTaskForm }
           </div>
-          <div className="col-lg-8 col-md-8 col-xs-12 col-sm-12">
-            <button className="btn btn-info"><i className="fas fa-plus"></i> Create new task</button>
+          <div className={isDisplayForm ? "col-lg-8 col-md-8 col-xs-12 col-sm-12" : "col-lg-12 col-md-12 col-xs-12 col-sm-12"} >
+            <button className="btn btn-info" onClick={this.onToggleForm}>
+              <i className="fas fa-plus"></i> Create new task
+            </button>
             <button className="btn btn-warning ml-2" onClick = {this.onGenerateData}> Generate Data</button>
             {/* Search & Sort */}                        
             <Controls />
