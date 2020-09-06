@@ -13,8 +13,8 @@ class TaskItem extends Component {
               </span>  
             </td>
             <td className="text-center">
-              <button className="btn btn-info"> <i class="fas fa-edit"> </i> </button> {"  "}
-              <button className="btn btn-danger"> <i class="fas fa-trash"> </i> </button> {"  "}
+              <button className="btn btn-info"> <i className="fas fa-edit"> </i> </button> {"  "}
+              <button className="btn btn-danger"> <i className="fas fa-trash"> </i> </button> {"  "}
             </td>
         </tr>
       );

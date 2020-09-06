@@ -9,7 +9,7 @@ class TaskList extends Component {
     });
 
     return (     
-        <table class="table table-bordered table-hover">
+        <table className="table table-bordered table-hover">
             <thead>
                 <tr className="text-center">
                     <th>No</th>
