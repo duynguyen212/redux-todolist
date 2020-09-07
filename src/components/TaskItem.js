@@ -4,15 +4,15 @@ class TaskItem extends Component {
   render() {
     var { task, index } = this.props;
     return (
-        <tr>
+        <tr  className="text-center">
             <td> { index + 1 } </td>
-            <td>{ task.name }</td>
-            <td className="text-center">
+            <td  className="text-left">{ task.name }</td>
+            <td>
               <span className = { task.status ? "badge badge-success" : "badge badge-warning" }>
                 {task.status ? "Done" : "Waiting"}
               </span>  
             </td>
-            <td className="text-center">
+            <td>
               <button className="btn btn-info"> <i className="fas fa-edit"> </i> </button> {"  "}
               <button className="btn btn-danger"> <i className="fas fa-trash"> </i> </button> {"  "}
             </td>
