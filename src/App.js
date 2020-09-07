@@ -21,38 +21,6 @@ class App extends Component {
     }
   }
 
-  onGenerateData = () => {
-    //console.log('generate');
-    //id: unique, name, status
-    var tasks = [
-      {
-        id: this.generateIdString(),
-        name: 'Learn React JS',
-        status: true
-      },
-      {
-        id: this.generateIdString(),
-        name: 'Play PUBG',
-        status: false
-      },
-      {
-        id: this.generateIdString(),
-        name: 'Learn Node JS',
-        status: false
-      },
-      {
-        id: this.generateIdString(),
-        name: 'Play football',
-        status: true
-      }
-    ];
-    this.setState({tasks: tasks});
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-
-    console.log(tasks);
-  }
- 
-
   s4() {
     return Math.floor((1 + Math.random()) * 0x10000).toString(16).substr(4);
   }
@@ -68,13 +36,24 @@ class App extends Component {
   }
 
   onCloseForm = () => {
-    //console.log('you closed form');
-    this.setState({ isDisplayForm: false });
+    this.setState({
+      isDisplayForm: false
+    });
+  }
+
+  onSubmit = (data) => {
+    //console.log(data);
+    var { tasks } = this.state;
+    data.id = this.generateIdString();
+    tasks.push(data);
+    this.setState({ tasks : tasks});
+    localStorage.setItem('tasks', JSON.stringify(tasks));
   }
 
   render() {
     var { tasks, isDisplayForm } = this.state // ~ var tasks = this.state.tasks;
-    var elmTaskForm = isDisplayForm ? <TaskForm onCloseForm = { this.onCloseForm } /> : '';
+    var elmTaskForm = isDisplayForm ? <TaskForm onCloseForm = {this.onCloseForm} 
+                                        onSubmit = { this.onSubmit } /> : '';
     return (
       <div className="container">
         <div className="mt-2">
@@ -86,11 +65,11 @@ class App extends Component {
           <div className="col-lg-4 col-md-4 col-xs-12 col-sm-12">
             { elmTaskForm }
           </div>
-          <div className={isDisplayForm ? "col-lg-8 col-md-8 col-xs-12 col-sm-12" : "col-lg-12 col-md-12 col-xs-12 col-sm-12"} >
-            <button className="btn btn-info" onClick={this.onToggleForm}>
+          <div className={ isDisplayForm ? "col-lg-8 col-md-8 col-xs-12 col-sm-12" : "col-lg-12 col-md-12 col-xs-12 col-sm-12" } >
+            <button className="btn btn-info" onClick = {this.onToggleForm}>
               <i className="fas fa-plus"></i> Create new task
             </button>
-            <button className="btn btn-warning ml-2" onClick = {this.onGenerateData}> Generate Data</button>
+           
             {/* Search & Sort */}                        
             <Controls />
   
