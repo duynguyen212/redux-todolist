@@ -15,7 +15,7 @@ class App extends Component {
         name: '',
         status: -1
       },
-      keyword: ''
+      keyword: ''    
     };
   }
   
