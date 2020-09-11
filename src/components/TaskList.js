@@ -5,7 +5,10 @@ class TaskList extends Component {
   render() {
     var { tasks } = this.props; // ~ var tasks = this.props.tasks
     var elmTasks = tasks.map((task, index) => {
-        return <TaskItem key= {task.id} index = {index} task={task} />
+        return <TaskItem key= {task.id} index = {index} task={task} 
+        onUpdateStatus = {this.props.onUpdateStatus} 
+        onUpdate = {this.props.onUpdate} 
+        onDelete = {this.props.onDelete} />
     });
 
     return (     

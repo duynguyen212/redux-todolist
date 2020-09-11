@@ -19,4 +19,9 @@ code {
   cursor: pointer;
 }
 
-
+#task-status:hover {
+  cursor: pointer;  
+}
+#close-form-icon:hover {
+  color: white;
+}
