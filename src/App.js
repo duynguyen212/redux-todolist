@@ -10,7 +10,12 @@ class App extends Component {
     this.state = {
       tasks: [],
       isDisplayForm: false,
-      taskEditting: null
+      taskEditting: null,
+      filter : {
+        name: '',
+        status: -1
+      },
+      keyword: ''
     };
   }
   
@@ -120,8 +125,51 @@ class App extends Component {
     this.onCloseForm();
   }
 
+  onFilter = (filerName, filterStatus) => {
+    //console.log(filerName, '---', filterStatus );
+    filterStatus = parseInt(filterStatus);
+    //console.log(typeof filterStatus);
+    this.setState({
+      filter: {
+        name: filerName.toLowerCase(),
+        status: filterStatus
+      }      
+    });
+  }
+
+  onSearch = (keyword) => {
+    //console.log(keyword);
+    this.setState({keyword: keyword});
+  }
+
   render() {
-    var { tasks, isDisplayForm, taskEditting } = this.state // ~ var tasks = this.state.tasks;
+    var { tasks, isDisplayForm, taskEditting, filter, keyword } = this.state; // ~ var tasks = this.state.tasks;
+    /** Filter */
+    //console.log(filter);
+    if(filter) {
+      if(filter.name){
+        tasks = tasks.filter((task) => {
+          return task.name.toLowerCase().indexOf(filter.name) !== -1;
+        });
+      }
+      tasks = tasks.filter((task) => {
+        if(filter.status === -1) {
+          return task;
+        } 
+        else {
+          return task.status === (filter.status === 1 ? true: false);
+        }
+      });      
+    }
+    
+    /**  Search */
+    if(keyword) {
+      tasks = tasks.filter((task) => {
+        return task.name.toLowerCase().indexOf(keyword) !== -1;
+      });
+    }
+
+
     var elmTaskForm = isDisplayForm ? <TaskForm onCloseForm = {this.onCloseForm} 
                                         onSubmit = { this.onSubmit }
                                         task = { taskEditting } /> : '';
@@ -142,13 +190,14 @@ class App extends Component {
             </button>
            
             {/* Search & Sort */}                        
-            <Controls />
+            <Controls onSearch = { this.onSearch } />
   
             {/* Task(s) List */}
             <div className="row mt-3">
               <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <TaskList tasks = { tasks } onUpdateStatus = {this.onUpdateStatus} 
-                  onUpdate = {this.onUpdate} onDelete = {this.onDelete} />
+                          onUpdate = {this.onUpdate} onDelete = {this.onDelete} 
+                          onFilter = { this.onFilter } />
               </div>
             </div>
           </div>
