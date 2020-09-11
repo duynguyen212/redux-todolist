@@ -4,6 +4,7 @@ class TaskForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            id: '',
             name: '',
             status: false
         };
@@ -41,20 +42,51 @@ class TaskForm extends Component {
     onResetForm = () => {
         this.setState({
             name: '',
-            status: false
+            status: false,            
         });
         //clode form
         this.onCloseForm();
     }
 
+    componentWillMount() {
+        if(this.props.task) {
+            this.setState({
+                id: this.props.task.id,
+                name: this.props.task.name,
+                status: this.props.task.status
+            });
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        //console.log(nextProps);
+        if(nextProps && nextProps.task) {
+            this.setState({
+                id: nextProps.task.id,
+                name: nextProps.task.name,
+                status: nextProps.task.status
+            });
+        } 
+        else if (!nextProps.task){
+            //console.log('editting -> new task');
+            this.setState({
+                id: '',
+                name: '',
+                status: false
+            });
+        }
+    }
+
   render() {
+    var { id } = this.state;
+
     return (
         <div className="card border-warning mb-3">
             <div className="card-header bg-warning">
                 <h5>
-                    New task
+                    { id !== '' ? 'Update task' : 'New task'}
                     <span className="float-right" onClick = {this.onCloseForm} id="close-form">
-                        <i className="far fa-times-circle"></i>
+                        <i id="close-form-icon" className="far fa-times-circle"></i>
                     </span>
                 </h5>
             </div>

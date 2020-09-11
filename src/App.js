@@ -9,7 +9,8 @@ class App extends Component {
     super(props);
     this.state = {
       tasks: [],
-      isDisplayForm: false
+      isDisplayForm: false,
+      taskEditting: null
     };
   }
   
@@ -30,30 +31,100 @@ class App extends Component {
   }
 
   onToggleForm = () => {
-    this.setState({
-      isDisplayForm: !this.state.isDisplayForm
-    });
+    if(this.state.isDisplayForm && this.state.taskEditting) {
+      this.setState({
+        isDisplayForm: true,
+        taskEditting: null
+      });
+    } 
+    else {
+      this.setState({
+        isDisplayForm: !this.state.isDisplayForm,
+        taskEditting: null
+      });
+    }
   }
 
   onCloseForm = () => {
     this.setState({
-      isDisplayForm: false
+      isDisplayForm: false, taskEditting: null
+    });
+  }
+
+  onShowForm = () => {
+    this.setState({
+      isDisplayForm: true
     });
   }
 
   onSubmit = (data) => {
     //console.log(data);
     var { tasks } = this.state;
-    data.id = this.generateIdString();
-    tasks.push(data);
-    this.setState({ tasks : tasks});
+    if(data.id === '') {
+      //new task
+      data.id = this.generateIdString();
+      tasks.push(data);
+    } 
+    else {
+      //editting
+      var index = this.findTaskById(data.id);
+      tasks[index] = data;      
+    }
+    
+    this.setState({ tasks : tasks, taskEditting: null });
+
     localStorage.setItem('tasks', JSON.stringify(tasks));
   }
 
+  onUpdateStatus = (id) => {
+    //console.log(id);
+    var {tasks} = this.state;
+    var index = this.findTaskById(id);
+    if(index !== -1) {
+      tasks[index].status = !tasks[index].status;
+      this.setState({tasks : tasks});
+    }
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }
+
+  findTaskById = (id) => {
+    var { tasks } = this.state;
+    var result = -1;
+    tasks.forEach((task, index) => {
+      if(task.id === id) {
+        return result = index;
+      }
+    });
+    return result;
+  }
+
+  onUpdate = (id) => {
+    //console.log(id);
+    var {tasks} = this.state;
+    var index = this.findTaskById(id);
+    var taskEditting = tasks[index];
+    this.setState({ taskEditting: taskEditting    });
+    //console.log(taskEditting);
+    this.onShowForm();
+  }
+
+  onDelete = (id) => {
+    console.log(id);
+    var {tasks} = this.state;
+    var index = this.findTaskById(id);
+    if(index !== -1) {
+      tasks.splice(index, 1);
+      this.setState({tasks : tasks});
+    }
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+    this.onCloseForm();
+  }
+
   render() {
-    var { tasks, isDisplayForm } = this.state // ~ var tasks = this.state.tasks;
+    var { tasks, isDisplayForm, taskEditting } = this.state // ~ var tasks = this.state.tasks;
     var elmTaskForm = isDisplayForm ? <TaskForm onCloseForm = {this.onCloseForm} 
-                                        onSubmit = { this.onSubmit } /> : '';
+                                        onSubmit = { this.onSubmit }
+                                        task = { taskEditting } /> : '';
     return (
       <div className="container">
         <div className="mt-2">
@@ -76,7 +147,8 @@ class App extends Component {
             {/* Task(s) List */}
             <div className="row mt-3">
               <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <TaskList tasks = { tasks } />
+                <TaskList tasks = { tasks } onUpdateStatus = {this.onUpdateStatus} 
+                  onUpdate = {this.onUpdate} onDelete = {this.onDelete} />
               </div>
             </div>
           </div>
