@@ -6,7 +6,7 @@ class Search extends Component {
     this.state = {
       keyword: ''
     };
-
+    
   }
 
   onChange = (event) => {
