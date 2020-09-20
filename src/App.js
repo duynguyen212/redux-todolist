@@ -15,7 +15,9 @@ class App extends Component {
         name: '',
         status: -1
       },
-      keyword: ''    
+      keyword: '',
+      sortBy: 'name',
+      sortValue: 1      
     };
   }
   
@@ -142,8 +144,17 @@ class App extends Component {
     this.setState({keyword: keyword});
   }
 
+  onSort = (sortBy, sortValue) => {
+    //console.log(sortBy, '-', sortValue);
+    this.setState({
+      sortBy: sortBy, 
+      sortValue: sortValue
+    });
+  }
+
   render() {
-    var { tasks, isDisplayForm, taskEditting, filter, keyword } = this.state; // ~ var tasks = this.state.tasks;
+    var { tasks, isDisplayForm, taskEditting, filter, keyword, 
+      sortBy, sortValue  } = this.state; // ~ var tasks = this.state.tasks;
     /** Filter */
     //console.log(filter);
     if(filter) {
@@ -169,10 +180,25 @@ class App extends Component {
       });
     }
 
-
+    if(sortBy === 'name') {
+      tasks.sort((a, b) => {
+        if(a.name > b.name) return sortValue;
+        else if(a.name < b.name) return -sortValue;
+        else return 0;
+      });
+    } 
+    else {
+      tasks.sort((a, b) => {
+        if(a.status > b.status) return -sortValue;
+        else if(a.status < b.status) return sortValue;
+        else return 0;
+      });
+    }
+    
     var elmTaskForm = isDisplayForm ? <TaskForm onCloseForm = {this.onCloseForm} 
                                         onSubmit = { this.onSubmit }
                                         task = { taskEditting } /> : '';
+                                        
     return (
       <div className="container">
         <div className="mt-2">
@@ -190,7 +216,10 @@ class App extends Component {
             </button>
            
             {/* Search & Sort */}                        
-            <Controls onSearch = { this.onSearch } />
+            <Controls onSearch = { this.onSearch } 
+                      onSort = {this.onSort} 
+                      sortBy = {sortBy}
+                      sortValue = {sortValue} />
   
             {/* Task(s) List */}
             <div className="row mt-3">
