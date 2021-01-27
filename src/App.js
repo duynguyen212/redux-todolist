@@ -3,12 +3,12 @@ import './App.css';
 import TaskForm from './components/TaskForm';
 import Controls from './components/Controls';
 import TaskList from './components/TaskList';
+import _ from 'lodash';
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      tasks: [],
+    this.state = {      
       isDisplayForm: false,
       taskEditting: null,
       filter : {
@@ -21,22 +21,6 @@ class App extends Component {
     };
   }
   
-  componentWillMount(){
-    //console.log('component will mount');
-    if(localStorage && localStorage.getItem('tasks')) {
-      var tasks = JSON.parse(localStorage.getItem('tasks'));
-      this.setState({tasks: tasks});
-    }
-  }
-
-  s4() {
-    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substr(4);
-  }
-
-  generateIdString() {
-    return this.s4() + '-' + this.s4() + 'x' + this.s4() + this.s4();
-  }
-
   onToggleForm = () => {
     if(this.state.isDisplayForm && this.state.taskEditting) {
       this.setState({
@@ -86,7 +70,11 @@ class App extends Component {
   onUpdateStatus = (id) => {
     //console.log(id);
     var {tasks} = this.state;
-    var index = this.findTaskById(id);
+    //var index = this.findTaskById(id);
+    var index = _.findIndex(tasks, (task) => {
+      return task.id === id;
+    });
+
     if(index !== -1) {
       tasks[index].status = !tasks[index].status;
       this.setState({tasks : tasks});
@@ -153,10 +141,11 @@ class App extends Component {
   }
 
   render() {
-    var { tasks, isDisplayForm, taskEditting, filter, keyword, 
+    var {  isDisplayForm, taskEditting, filter, keyword, 
       sortBy, sortValue  } = this.state; // ~ var tasks = this.state.tasks;
     /** Filter */
-    //console.log(filter);
+  /* 26/01/2021
+    console.log(filter);
     if(filter) {
       if(filter.name){
         tasks = tasks.filter((task) => {
@@ -172,14 +161,23 @@ class App extends Component {
         }
       });      
     }
-    
+    */
     /**  Search */
-    if(keyword) {
-      tasks = tasks.filter((task) => {
-        return task.name.toLowerCase().indexOf(keyword) !== -1;
-      });
-    }
+    /* 26/01/2021
+    tasks = _.filter(tasks, (task) => {
+      return task.name.toLowerCase().indexOf(keyword.toLowerCase()) !== -1;
+    });
+    */
+    // if(keyword) {
+    //   // tasks = tasks.filter((task) => {
+    //   //   return task.name.toLowerCase().indexOf(keyword) !== -1;
+    //   // });
+    //   tasks = filter((task)=> {
+    //     return task.name.toLowerCase().indexOf(keyword.toLowerCase()) !== -1;
+    //   });
 
+    // }
+/* 26/01/2021
     if(sortBy === 'name') {
       tasks.sort((a, b) => {
         if(a.name > b.name) return sortValue;
@@ -194,7 +192,7 @@ class App extends Component {
         else return 0;
       });
     }
-    
+ */   
     var elmTaskForm = isDisplayForm ? <TaskForm onCloseForm = {this.onCloseForm} 
                                         onSubmit = { this.onSubmit }
                                         task = { taskEditting } /> : '';
@@ -224,7 +222,7 @@ class App extends Component {
             {/* Task(s) List */}
             <div className="row mt-3">
               <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <TaskList tasks = { tasks } onUpdateStatus = {this.onUpdateStatus} 
+                <TaskList onUpdateStatus = {this.onUpdateStatus} 
                           onUpdate = {this.onUpdate} onDelete = {this.onDelete} 
                           onFilter = { this.onFilter } />
               </div>
